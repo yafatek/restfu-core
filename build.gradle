@@ -1,0 +1,92 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java-library'
+	id 'maven-publish' /* maven publish */
+}
+
+group = 'dev.yafatek'
+version = '1.0.101'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+java {
+	withJavadocJar()
+	withSourcesJar()
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId = 'dev.yafatek.rest-core'
+			from components.java
+			versionMapping {
+				usage('java-api') {
+					fromResolutionOf('runtimeClasspath')
+				}
+				usage('java-runtime') {
+					fromResolutionResult()
+				}
+			}
+			pom {
+				name = 'YafaTek RestFul Core'
+				description = 'RestFul Genirec Lib'
+				url = 'https://yafatek.dev'
+				licenses {
+					license {
+						name = 'The Apache License, Version 2.0'
+						url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					}
+				}
+				developers {
+					developer {
+						id = 'YafaTek Solutions'
+						name = 'YafaTek'
+						email = 'info@yafatek.dev'
+					}
+				}
+				scm {
+					connection = 'scm:git:git://yafatek/restfu-core'
+					developerConnection = 'scm:git:ssh://yafatek/restfu-core'
+					url = 'https://yafatek.dev'
+				}
+			}
+		}
+	}
+	repositories {
+		maven {
+			// change URLs to point to your repos, e.g. http://my.org/repo
+			def releasesRepoUrl = layout.buildDirectory.dir('repos/releases')
+			def snapshotsRepoUrl = layout.buildDirectory.dir('repos/snapshots')
+			url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+		}
+	}
+}
+jar {
+	enabled = true
+}
+
+bootJar {
+	classifier = 'application'
+}
+
+configurations {
+	[apiElements, runtimeElements].each {
+		it.outgoing.artifacts.removeIf {
+			it.buildDependencies.getDependencies(null).contains(jar)
+		}
+		it.outgoing.artifact(bootJar)
+	}
+}
+javadoc {
+	if (JavaVersion.current().isJava9Compatible()) {
+		options.addBooleanOption('html5', true)
+	}
+}
