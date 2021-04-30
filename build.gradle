@@ -3,42 +3,50 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java-library'
 	id 'maven-publish' /* maven publish */
+	id 'signing'
 }
 
 group = 'dev.yafatek'
 version = '1.0.101'
 sourceCompatibility = '11'
+archivesBaseName = "rest-core"
 
 repositories {
 	mavenCentral()
 }
 
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
-java {
-	withJavadocJar()
-	withSourcesJar()
+task javadocJar(type: Jar) {
+	classifier = 'javadoc'
+	from javadoc
+}
+
+task sourcesJar(type: Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives javadocJar, sourcesJar
+}
+signing {
+	sign configurations.archives
 }
 
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifactId = 'dev.yafatek.rest-core'
-			from components.java
-			versionMapping {
-				usage('java-api') {
-					fromResolutionOf('runtimeClasspath')
-				}
-				usage('java-runtime') {
-					fromResolutionResult()
-				}
-			}
 			pom {
-				name = 'YafaTek RestFul Core'
-				description = 'RestFul Genirec Lib'
-				url = 'https://yafatek.dev'
+				name = 'My Library'
+				description = 'A concise description of my library'
+				url = 'http://www.example.com/library'
+				properties = [
+						myProp: "value",
+						"prop.with.dots": "anotherValue"
+				]
 				licenses {
 					license {
 						name = 'The Apache License, Version 2.0'
@@ -47,46 +55,62 @@ publishing {
 				}
 				developers {
 					developer {
-						id = 'YafaTek Solutions'
-						name = 'YafaTek'
-						email = 'info@yafatek.dev'
+						id = 'johnd'
+						name = 'John Doe'
+						email = 'john.doe@example.com'
 					}
 				}
 				scm {
-					connection = 'scm:git:git://yafatek/restfu-core'
-					developerConnection = 'scm:git:ssh://yafatek/restfu-core'
-					url = 'https://yafatek.dev'
+					connection = 'scm:git:git://example.com/my-library.git'
+					developerConnection = 'scm:git:ssh://example.com/my-library.git'
+					url = 'http://example.com/my-library/'
 				}
 			}
 		}
 	}
-	repositories {
-		maven {
-			// change URLs to point to your repos, e.g. http://my.org/repo
-			def releasesRepoUrl = layout.buildDirectory.dir('repos/releases')
-			def snapshotsRepoUrl = layout.buildDirectory.dir('repos/snapshots')
-			url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-		}
-	}
-}
-jar {
-	enabled = true
 }
 
-bootJar {
-	classifier = 'application'
-}
-
-configurations {
-	[apiElements, runtimeElements].each {
-		it.outgoing.artifacts.removeIf {
-			it.buildDependencies.getDependencies(null).contains(jar)
-		}
-		it.outgoing.artifact(bootJar)
-	}
-}
-javadoc {
-	if (JavaVersion.current().isJava9Compatible()) {
-		options.addBooleanOption('html5', true)
-	}
-}
+//uploadArchives {
+//	repositories {
+//		mavenDeployer {
+//			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+//
+//			repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//				authentication(userName: ossrhUsername, password: ossrhPassword)
+//			}
+//
+//			snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+//				authentication(userName: ossrhUsername, password: ossrhPassword)
+//			}
+//
+//			pom.project {
+//				name 'YafaTek RestFul Core'
+//				packaging 'jar'
+//				// optionally artifactId can be defined here
+//				description 'smart library to manage and build restFul Apis Services layer within minutes.'
+//				url 'https://yafatek.dev/libs/rest-core'
+//
+//				scm {
+//					connection 'scm:svn:https://github.com/yafatek/restfu-core'
+//					developerConnection 'scm:svn:https://github.com/yafatek/restfu-core'
+//					url 'https://github.com/yafatek/restfu-core'
+//				}
+//
+//				licenses {
+//					license {
+//						name 'The Apache License, Version 2.0'
+//						url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//					}
+//				}
+//
+//				developers {
+//					developer {
+//						id 'YafaTek Solutions'
+//						name 'YafaTek'
+//						email 'ceo@yafatek.dev'
+//					}
+//				}
+//			}
+//		}
+//	}
+//}
