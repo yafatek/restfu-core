@@ -13,6 +13,11 @@ import java.util.UUID;
 
 public class UnitTest {
 
+    /**
+     * This is a unit test to test the Api Library
+     * and check if its usable among the way while developing the libraries
+     * the library is using some theory about the rest controlllers
+     */
     private static ApiServices<User, UUID> apiServices; //= ApiServices.build();
 
     public static void main(String[] args) {
