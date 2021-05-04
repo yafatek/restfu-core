@@ -1,13 +1,12 @@
 package dev.yafatek.restcore.services;
 
 import dev.yafatek.restcore.api.utils.ApiResponse;
+import dev.yafatek.restcore.api.utils.DeleteResponse;
 import dev.yafatek.restcore.api.utils.ErrorResponse;
 import dev.yafatek.restcore.domain.BaseEntity;
-import dev.yafatek.restcore.domain.GenericRepo;
-import dev.yafatek.restcore.wrappers.ApiServicesWrapper;
 
+import java.io.Serializable;
 import java.time.Instant;
-import java.util.UUID;
 
 /**
  * Entry point to the library
@@ -18,12 +17,12 @@ import java.util.UUID;
  * @param <ID> UUID Based Class to use it as an ID to the System Tables.
  * @see BaseEntity for more information.
  */
-public interface ApiServices<T extends BaseEntity, ID extends UUID> {
+public interface ApiServices<T extends BaseEntity, ID extends Serializable> {
 
-    default ApiServices<T, ID> build(GenericRepo<T, ID> genericRepo) {
-        return new ApiServicesWrapper<>(genericRepo) {
-        };
-    }
+//    default ApiServices<T, ID> build(GenericRepo<T, ID> genericRepo) {
+//        return new ApiServicesWrapper<>(genericRepo) {
+//        };
+//    }
 
     /**
      * Method to Save the Data to the target Schema Table
@@ -57,9 +56,10 @@ public interface ApiServices<T extends BaseEntity, ID extends UUID> {
 
     ApiResponse<T, ErrorResponse> updateById(T entity, ID entityId);
 
-    ApiResponse<T, ErrorResponse> deleteById(ID entityId);
+    ApiResponse<DeleteResponse, ErrorResponse> deleteById(ID entityId);
 
-    ApiResponse<T, ErrorResponse> bulkDelete();
+    ApiResponse<DeleteResponse, ErrorResponse> bulkDelete();
 
+    boolean checkId(ID id);
 
 }

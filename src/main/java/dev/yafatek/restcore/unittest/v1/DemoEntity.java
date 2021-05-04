@@ -1,17 +1,22 @@
 package dev.yafatek.restcore.unittest.v1;
 
 import dev.yafatek.restcore.domain.BaseEntity;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "demo")
 public class DemoEntity extends BaseEntity {
+    @Id
+    @Type(type = "org.hibernate.type.UUIDCharType")
+    @Column(name = "id", columnDefinition = "BINARY(36)", updatable = false, nullable = false)
+    protected UUID id;
+
+    @org.springframework.data.annotation.Version
+    private int version;
     @Lob
     @Column(name = "description")
     protected String description;
@@ -20,8 +25,10 @@ public class DemoEntity extends BaseEntity {
     public DemoEntity() {
     }
 
-    public DemoEntity(UUID id, int version, Instant created, String description, String attribute) {
-        super(id, version, created);
+    public DemoEntity(Instant created, UUID id, int version, String description, String attribute) {
+        super(created);
+        this.id = id;
+        this.version = version;
         this.description = description;
         this.attribute = attribute;
     }

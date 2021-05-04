@@ -34,6 +34,15 @@ public final class ApiUtils {
         );
     }
 
+    public static <T> ApiResponse<T, ErrorResponse> success(boolean status, String message, String code, T body) {
+        return new ApiResponse<>(
+                status,
+                code,
+                message,
+                body
+        );
+    }
+
     /**
      * Method to send success response but with error body as well.
      *

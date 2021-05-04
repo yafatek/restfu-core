@@ -11,9 +11,12 @@ import java.util.UUID;
 @RestController
 @RequestMapping("api/v1/d")
 public class DemoController {
-    //    @Autowired
-    protected DemoRepo<DemoEntity, UUID> demoEntityUUIDDemoRepo;
+    protected final DemoRepo<DemoEntity, UUID> demoEntityUUIDDemoRepo;
     protected ApiServices<DemoEntity, UUID> apiServices = new ApiServiceImpl<>(demoEntityUUIDDemoRepo);
+
+    public DemoController(DemoRepo<DemoEntity, UUID> demoEntityUUIDDemoRepo) {
+        this.demoEntityUUIDDemoRepo = demoEntityUUIDDemoRepo;
+    }
 
     @GetMapping
     public Object get() {
