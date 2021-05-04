@@ -4,6 +4,7 @@ import dev.yafatek.restcore.domain.BaseEntity;
 import dev.yafatek.restcore.domain.GenericRepo;
 import dev.yafatek.restcore.services.ApiServices;
 import org.hibernate.annotations.Type;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
@@ -18,9 +19,17 @@ public class UnitTest {
      * and check if its usable among the way while developing the libraries
      * the library is using some theory about the rest controlllers
      */
-    private static ApiServices<User, UUID> apiServices; //= ApiServices.build();
+    @Autowired
+    private static UserRepo userRepo;
+    //    @Autowired
+//    private static ApiServiceImpl<User,UUID> apiService;
+    private static ApiServices<User, UUID> apiServices;
+//    private static ApiServices<User, UUID> apiServices = new ApiServiceImpl<>(userRepo); //= ApiServices.build();
 
     public static void main(String[] args) {
+
+        apiServices.build(userRepo)
+                .saveEntity();
 
         apiServices.getById(UUID.fromString("65daf6df-sfs3-gsdf-45-")).getResults();
         apiServices.bulkDelete();

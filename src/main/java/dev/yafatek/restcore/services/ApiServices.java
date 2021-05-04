@@ -3,6 +3,8 @@ package dev.yafatek.restcore.services;
 import dev.yafatek.restcore.api.utils.ApiResponse;
 import dev.yafatek.restcore.api.utils.ErrorResponse;
 import dev.yafatek.restcore.domain.BaseEntity;
+import dev.yafatek.restcore.domain.GenericRepo;
+import dev.yafatek.restcore.wrappers.ApiServicesWrapper;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -18,11 +20,16 @@ import java.util.UUID;
  */
 public interface ApiServices<T extends BaseEntity, ID extends UUID> {
 
+    default ApiServices<T, ID> build(GenericRepo<T, ID> genericRepo) {
+        return new ApiServicesWrapper<>(genericRepo) {
+        };
+    }
+
     /**
      * Method to Save the Data to the target Schema Table
      *
      * @param entity the entity to save
-     * @return apiresponse or null in case of failuer.
+     * @return api Response or null in case of failuer.
      */
     ApiResponse<T, ErrorResponse> saveEntity(T entity);
 
