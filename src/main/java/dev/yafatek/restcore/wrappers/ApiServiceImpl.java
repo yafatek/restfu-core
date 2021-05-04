@@ -1,5 +1,6 @@
 package dev.yafatek.restcore.wrappers;
 
+//import dev.yafatek.restcore.domain.BaseEntity;
 import dev.yafatek.restcore.domain.BaseEntity;
 import dev.yafatek.restcore.domain.GenericRepo;
 import org.springframework.stereotype.Service;

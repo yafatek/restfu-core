@@ -1,7 +1,5 @@
-package dev.yafatek.restcore.unittest.v1;
+package dev.yafatek.restcore.domain;
 
-import dev.yafatek.restcore.domain.BaseEntity;
-import dev.yafatek.restcore.domain.GenericRepo;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;

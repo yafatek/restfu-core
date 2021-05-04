@@ -15,7 +15,7 @@ import java.time.Instant;
  *
  * @param <T>  the child class that implements the the base entity
  * @param <ID> UUID Based Class to use it as an ID to the System Tables.
- * @see BaseEntity for more information.
+// * @see BaseEntity for more information.
  */
 public interface ApiServices<T extends BaseEntity, ID extends Serializable> {
 

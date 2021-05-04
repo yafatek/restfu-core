@@ -23,7 +23,9 @@ public abstract class ApiServicesWrapper<T extends BaseEntity, ID extends Serial
 
     protected static final String CANT_FIND = "Can't Load The Data";
     protected static final String CANT_UPDATE = "can't update resource";
+    protected static final String CANT_CREATE = "can't create resource";
     protected static final String DATA_LOADED = "Data Loaded";
+    protected static final String DATA_SAVED = "new resource saved!";
     protected static final Logger LOGGER = LoggerFactory.getLogger(ApiServicesWrapper.class);
     protected final GenericRepo<T, ID> genericRepo;
 
@@ -36,7 +38,13 @@ public abstract class ApiServicesWrapper<T extends BaseEntity, ID extends Serial
     @Override
     public ApiResponse<T, ErrorResponse> saveEntity(T entity) {
         LOGGER.info(" [.] saving new entity");
-        return new ApiResponse<>(false, "", "", genericRepo.save(entity));
+        try {
+            T saved = genericRepo.save(entity);
+            return success(true, DATA_SAVED, ApiResponseCodes.SUCCESS.name(), saved);
+        } catch (Exception ignore) {
+            return errorResponse(false, CANT_CREATE, ApiResponseCodes.FAIL.name(),
+                    new ErrorResponse("there is a problem creating new resource", ApiResponseCodes.FAIL.name()));
+        }
     }
 
 
@@ -55,19 +63,20 @@ public abstract class ApiServicesWrapper<T extends BaseEntity, ID extends Serial
         if (!checkId(entityId))
             return errorResponse(false, CANT_UPDATE, ApiResponseCodes.FAIL.toString(),
                     new ErrorResponse("the is is not a valid uuid", ApiResponseCodes.FAIL.toString()));
-        Optional<T> exist = genericRepo.findById(entityId);
-        return !exist.isPresent() ? errorResponse(false, CANT_FIND, ApiResponseCodes.RESOURCE_NOT_FOUND.name(),
-                new ErrorResponse("No Data Found For the Requested Resource", ApiResponseCodes.RESOURCE_NOT_FOUND.name()))
-                : success(true, "resource data loaded", ApiResponseCodes.SUCCESS.name(), exist.get());
+        return genericRepo.findById(entityId)
+                .map(t -> success(true, "resource data loaded", ApiResponseCodes.SUCCESS.name(), t))
+                .orElseGet(() -> errorResponse(false, CANT_FIND, ApiResponseCodes.RESOURCE_NOT_FOUND.name(),
+                        new ErrorResponse("No Data Found For the Requested Resource", ApiResponseCodes.RESOURCE_NOT_FOUND.name())));
     }
 
     @Override
     public ApiResponse<T, ErrorResponse> getAllAfter(Instant after) {
-        T exist = genericRepo.getByCreatedAfter(after);
-        return exist == null
-                ? errorResponse(false, CANT_FIND, ApiResponseCodes.RESOURCE_NOT_FOUND.toString(),
-                new ErrorResponse("can't find data after that date", ApiResponseCodes.RESOURCE_NOT_FOUND.toString()))
-                : success(true, DATA_LOADED, ApiResponseCodes.SUCCESS.toString(), exist);
+        return null;
+//        T exist = genericRepo.findByCreatedAfter(after);
+//        return exist == null
+//                ? errorResponse(false, CANT_FIND, ApiResponseCodes.RESOURCE_NOT_FOUND.toString(),
+//                new ErrorResponse("can't find data after that date", ApiResponseCodes.RESOURCE_NOT_FOUND.toString()))
+//                : success(true, DATA_LOADED, ApiResponseCodes.SUCCESS.toString(), exist);
     }
 
     @Override
