@@ -1,1 +1,3 @@
-RESTFULL Generic Lib
+### RESTFULL Generic Lib
+
+#### Getting started

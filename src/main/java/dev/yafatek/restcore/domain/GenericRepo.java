@@ -2,10 +2,17 @@ package dev.yafatek.restcore.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.List;
 
 @NoRepositoryBean
-public interface GenericRepo<T extends BaseEntity, ID extends UUID> extends JpaRepository<T,ID> {
+@Transactional
+public interface GenericRepo<T extends BaseEntity, ID extends Serializable> extends JpaRepository<T, ID> {
+    List<T> findAllByCreatedAfter(Instant after);
+//    T findByVersion(int version);
+    //  List<CallLog> findAllByCallTimeAfter(Instant after);
 }
+

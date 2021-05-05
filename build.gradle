@@ -20,6 +20,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	runtimeOnly 'mysql:mysql-connector-java'
 }
 task javadocJar(type: Jar) {
@@ -43,13 +44,13 @@ publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			pom {
-				name = 'My Library'
-				description = 'A concise description of my library'
-				url = 'http://www.example.com/library'
-				properties = [
-						myProp: "value",
-						"prop.with.dots": "anotherValue"
-				]
+				name = 'YafaTek RestFul Core'
+				description = 'light weight library to build modern RestFul Apis'
+				url = 'https://github.com/yafatek/restfu-core'
+//				properties = [
+//						myProp: "value",
+//						"prop.with.dots": "anotherValue"
+//				]
 				licenses {
 					license {
 						name = 'The Apache License, Version 2.0'
@@ -58,15 +59,15 @@ publishing {
 				}
 				developers {
 					developer {
-						id = 'johnd'
-						name = 'John Doe'
-						email = 'john.doe@example.com'
+						id = 'YafaTek Solutions'
+						name = 'YafaTek'
+						email = 'info@yafatek.dev'
 					}
 				}
 				scm {
-					connection = 'scm:git:git://example.com/my-library.git'
-					developerConnection = 'scm:git:ssh://example.com/my-library.git'
-					url = 'http://example.com/my-library/'
+					connection = 'scm:git:git://github.com/yafatek/restfu-core'
+					developerConnection = 'scm:git:ssh://github.com/yafatek/restfu-core'
+					url = 'https://github.com/yafatek/restfu-core'
 				}
 			}
 		}
