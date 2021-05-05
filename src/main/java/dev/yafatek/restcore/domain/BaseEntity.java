@@ -22,6 +22,9 @@ public abstract class BaseEntity implements Serializable {
     @Column(name = "id", columnDefinition = "BINARY(36)", updatable = false, nullable = false)
     protected UUID id;
 
+    @Version
+    protected int version = 1;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     @JsonDeserialize(using = InstantDeserializer.class)
@@ -39,6 +42,14 @@ public abstract class BaseEntity implements Serializable {
     public BaseEntity(UUID id, Instant created) {
         this.id = id;
         this.created = created;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public UUID getId() {

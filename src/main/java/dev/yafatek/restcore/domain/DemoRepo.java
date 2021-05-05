@@ -7,3 +7,4 @@ import java.util.UUID;
 @Repository
 public interface DemoRepo<T extends BaseEntity, ID extends UUID> extends GenericRepo<T, ID> {
 }
+
