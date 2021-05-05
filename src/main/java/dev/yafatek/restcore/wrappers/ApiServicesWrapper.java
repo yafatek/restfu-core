@@ -6,7 +6,6 @@ import dev.yafatek.restcore.domain.GenericRepo;
 import dev.yafatek.restcore.services.ApiServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,7 +29,6 @@ public abstract class ApiServicesWrapper<T extends BaseEntity, ID extends Serial
     protected static final Logger LOGGER = LoggerFactory.getLogger(ApiServicesWrapper.class);
     protected final GenericRepo<T, ID> genericRepo;
 
-    @Autowired
     public ApiServicesWrapper(GenericRepo<T, ID> genericRepo) {
         this.genericRepo = genericRepo;
         LOGGER.info(" [*] generic repository: {}", genericRepo);
