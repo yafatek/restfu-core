@@ -1,3 +1,8 @@
+buildscript {
+	dependencies {
+		classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.21.0"
+	}
+}
 plugins {
 	id 'org.springframework.boot' version '2.4.5'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -9,7 +14,7 @@ plugins {
 group = 'dev.yafatek'
 version = '1.0.101'
 sourceCompatibility = '11'
-archivesBaseName = "rest-core"
+archivesBaseName = "yafatek-restcore"
 
 repositories {
 	mavenCentral()
@@ -20,8 +25,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	runtimeOnly 'mysql:mysql-connector-java'
+//	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+//	runtimeOnly 'mysql:mysql-connector-java'
+
 }
 task javadocJar(type: Jar) {
 	classifier = 'javadoc'
@@ -33,88 +39,159 @@ task sourcesJar(type: Jar) {
 	from sourceSets.main.allSource
 }
 
+
+
+
+bootJar {
+	enabled = false
+}
+
+jar {
+	enabled = true
+}
+
+
+
 artifacts {
 	archives javadocJar, sourcesJar
 }
+//signing {
+//	sign configurations.archives
+//}
 signing {
-	sign configurations.archives
+	sign publishing.publications
 }
-
 publishing {
 	publications {
-		mavenJava(MavenPublication) {
+		libertyGradle (MavenPublication) {
+			artifactId = archivesBaseName
+
+			from components.java
+			artifact sourcesJar
+			artifact javadocJar
 			pom {
-				name = 'YafaTek RestFul Core'
-				description = 'light weight library to build modern RestFul Apis'
-				url = 'https://github.com/yafatek/restfu-core'
-//				properties = [
-//						myProp: "value",
-//						"prop.with.dots": "anotherValue"
-//				]
+				name = 'liberty-gradle-plugin'
+				packaging = 'jar'
+				description = 'Liberty Gradle Plug-in.'
+				url = 'https://wasdev.github.io'
 				licenses {
 					license {
-						name = 'The Apache License, Version 2.0'
-						url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+						name = 'The Apache Software License, Version 2.0'
+						url = 'https://raw.github.com/OpenLiberty/ci.gradle/main/LICENSE'
 					}
 				}
+
 				developers {
 					developer {
-						id = 'YafaTek Solutions'
-						name = 'YafaTek'
-						email = 'info@yafatek.dev'
+						id = 'jgawor'
+						name = 'Jarek Gawor'
+						email = 'jgawor@gmail.com'
 					}
 				}
 				scm {
-					connection = 'scm:git:git://github.com/yafatek/restfu-core'
-					developerConnection = 'scm:git:ssh://github.com/yafatek/restfu-core'
-					url = 'https://github.com/yafatek/restfu-core'
+					connection = 'scm:git:git@github.com:OpenLiberty/ci.gradle.git'
+					developerConnection = 'scm:git:git@github.com:OpenLiberty/ci.gradle.git'
+					url = 'git@github.com:OpenLiberty/ci.gradle.git'
+					tag = 'HEAD'
 				}
+			}
+			repositories {
+		// The repository to publish to, Sonatype/MavenCentral
+		maven {
+			// This is an arbitrary name, you may also use "mavencentral" or
+			// any other name that's descriptive for you
+			name = "sonatype"
+
+			def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+			def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+			// You only need this if you want to publish snapshots, otherwise just set the URL
+			// to the release repo directly
+			url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+			// The username and password we've fetched earlier
+			credentials {
+				username = ossrhUsername
+				password = ossrhPassword
 			}
 		}
 	}
-}
+		}
 
-//uploadArchives {
-//	repositories {
-//		mavenDeployer {
-//			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+	}
+}
+//publishing {
+//	publications {
+//		libertyGradle(MavenPublication) {
+//			// The coordinates of the library, being set from variables that
+//			// we'll set up in a moment
+//			groupId 'dev.yafatek'
+//			artifactId 'dev.yafatek.restcore'
+//			version '1.0.101'
 //
-//			repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-//				authentication(userName: ossrhUsername, password: ossrhPassword)
-//			}
+//			// Two artifacts, the `aar` and the sources
+//			from components.java
+//			artifact sourcesJar
 //
-//			snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-//				authentication(userName: ossrhUsername, password: ossrhPassword)
-//			}
-//
-//			pom.project {
-//				name 'YafaTek RestFul Core'
-//				packaging 'jar'
-//				// optionally artifactId can be defined here
-//				description 'smart library to manage and build restFul Apis Services layer within minutes.'
-//				url 'https://yafatek.dev/libs/rest-core'
-//
-//				scm {
-//					connection 'scm:svn:https://github.com/yafatek/restfu-core'
-//					developerConnection 'scm:svn:https://github.com/yafatek/restfu-core'
-//					url 'https://github.com/yafatek/restfu-core'
-//				}
-//
+//			// Self-explanatory metadata for the most part
+//			pom {
+//				name = 'YafaTek RestFul-Core Lib'
+//				description = 'light weight library to build modern RestFul Apis'
+//				// If your project has a dedicated site, use its URL here
+//				url = 'https://github.com/yafatek/restfu-core'
 //				licenses {
 //					license {
-//						name 'The Apache License, Version 2.0'
-//						url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//						name = 'The Apache License, Version 2.0'
+//						url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//					}
+//				}
+//				developers {
+//					developer {
+//						id = 'YafaTek Solutions'
+//						name = 'YafaTek'
+//						email = 'info@yafatek.dev'
+//					}
+//				}
+//				// Version control info, if you're using GitHub, follow the format as seen here
+//				scm {
+//					connection = 'scm:git:github.com/yafatek/restfu-core'
+//					developerConnection = 'scm:git:ssh://github.com/yafatek/restfu-core'
+//					url = 'https://github.com/yafatek/restfu-core'
+//				}
+//				// A slightly hacky fix so that your POM will include any transitive dependencies
+//				// that your library builds upon
+//				withXml {
+//					def dependenciesNode = asNode().appendNode('dependencies')
+//
+//					project.configurations.implementation.allDependencies.each {
+//						def dependencyNode = dependenciesNode.appendNode('dependency')
+//						dependencyNode.appendNode('groupId', it.group)
+//						dependencyNode.appendNode('artifactId', it.name)
+//						dependencyNode.appendNode('version', it.version)
 //					}
 //				}
 //
-//				developers {
-//					developer {
-//						id 'YafaTek Solutions'
-//						name 'YafaTek'
-//						email 'ceo@yafatek.dev'
-//					}
-//				}
+//			}
+//		}
+//	}
+//	repositories {
+//		// The repository to publish to, Sonatype/MavenCentral
+//		maven {
+//			// This is an arbitrary name, you may also use "mavencentral" or
+//			// any other name that's descriptive for you
+//			name = "sonatype"
+//
+//			def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+//			def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+//			// You only need this if you want to publish snapshots, otherwise just set the URL
+//			// to the release repo directly
+//			url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+//
+//			// The username and password we've fetched earlier
+//			credentials {
+//				username 'yafatek-solutions'
+//				password 'Yafa!@123Yafa!@123'
 //			}
 //		}
 //	}
 //}
+

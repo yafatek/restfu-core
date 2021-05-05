@@ -1,8 +1,8 @@
 package dev.yafatek.restcore.services;
 
-import dev.yafatek.restcore.api.utils.ApiResponse;
-import dev.yafatek.restcore.api.utils.DeleteResponse;
-import dev.yafatek.restcore.api.utils.ErrorResponse;
+import dev.yafatek.restcore.api.responses.ApiResponse;
+import dev.yafatek.restcore.api.responses.DeleteResponse;
+import dev.yafatek.restcore.api.responses.ErrorResponse;
 import dev.yafatek.restcore.domain.BaseEntity;
 
 import java.io.Serializable;
@@ -52,12 +52,36 @@ public interface ApiServices<T extends BaseEntity, ID extends Serializable> {
      */
     ApiResponse<List<T>, ErrorResponse> getAllAfter(Instant after);
 
+    /**
+     * method to update a resource based on its id
+     *
+     * @param entity   the resource entity
+     * @param entityId the resource id
+     * @return api response with the updated data
+     */
     ApiResponse<T, ErrorResponse> updateById(T entity, ID entityId);
 
+    /**
+     * method to delete resource in the Database
+     *
+     * @param entityId the resource id
+     * @return ApiResponse with the operation results.
+     */
     ApiResponse<DeleteResponse, ErrorResponse> deleteById(ID entityId);
 
+    /**
+     * method to bulk delete the data in a Table.
+     *
+     * @return api respons with the result
+     */
     ApiResponse<DeleteResponse, ErrorResponse> bulkDelete();
 
+    /**
+     * method to check if the UUID is Valid id
+     *
+     * @param id the uuid
+     * @return boolean
+     */
     boolean checkId(ID id);
 
 }
