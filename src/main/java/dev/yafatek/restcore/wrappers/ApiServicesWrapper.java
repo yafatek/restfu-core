@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static dev.yafatek.restcore.api.utils.ApiUtils.*;
 
@@ -49,18 +50,18 @@ public abstract class ApiServicesWrapper<T extends BaseEntity, ID extends Serial
 
 
     @Override
-    public ApiResponse<T, ErrorResponse> getAll() {
+    public ApiResponse<List<T>, ErrorResponse> getAll() {
         LOGGER.info(" [.] get All Table Data...");
         List<T> results = genericRepo.findAll();
         return results.isEmpty() ?
                 errorResponse(false, CANT_FIND, ApiResponseCodes.TABLE_EMPTY.toString(),
                         new ErrorResponse("target table is empty", ApiResponseCodes.TABLE_EMPTY.toString()))
-                : successResponse(true, "all data loaded!", ApiResponseCodes.SUCCESS.toString(), (T) results, null);
+                : success(true, "all data loaded!", ApiResponseCodes.SUCCESS.toString(), results);
     }
 
     @Override
     public ApiResponse<T, ErrorResponse> getById(ID entityId) {
-        if (!checkId(entityId))
+        if (checkId(entityId))
             return errorResponse(false, CANT_UPDATE, ApiResponseCodes.FAIL.toString(),
                     new ErrorResponse("the is is not a valid uuid", ApiResponseCodes.FAIL.toString()));
         return genericRepo.findById(entityId)
@@ -70,23 +71,23 @@ public abstract class ApiServicesWrapper<T extends BaseEntity, ID extends Serial
     }
 
     @Override
-    public ApiResponse<T, ErrorResponse> getAllAfter(Instant after) {
-        return null;
-//        T exist = genericRepo.findByCreatedAfter(after);
-//        return exist == null
-//                ? errorResponse(false, CANT_FIND, ApiResponseCodes.RESOURCE_NOT_FOUND.toString(),
-//                new ErrorResponse("can't find data after that date", ApiResponseCodes.RESOURCE_NOT_FOUND.toString()))
-//                : success(true, DATA_LOADED, ApiResponseCodes.SUCCESS.toString(), exist);
+    public ApiResponse<List<T>, ErrorResponse> getAllAfter(Instant after) {
+        List<T> exist = genericRepo.findAllByCreatedAfter(after);
+        return exist.isEmpty()
+                ? errorResponse(false, CANT_FIND, ApiResponseCodes.RESOURCE_NOT_FOUND.toString(),
+                new ErrorResponse("can't find data after that date", ApiResponseCodes.RESOURCE_NOT_FOUND.toString()))
+                : success(true, DATA_LOADED, ApiResponseCodes.SUCCESS.toString(), exist);
     }
 
     @Override
     public ApiResponse<T, ErrorResponse> updateById(T entity, ID entityId) {
-        if (!checkId(entityId))
+        if (checkId(entityId))
             return errorResponse(false, CANT_UPDATE, ApiResponseCodes.FAIL.toString(),
                     new ErrorResponse("the is is not a valid uuid", ApiResponseCodes.FAIL.toString()));
 
         Optional<T> optional = genericRepo.findById(entityId);
         if (optional.isPresent()) {
+            entity.setId((UUID) entityId);
             entity = genericRepo.save(entity);
             return successResponse(true, "update success", ApiResponseCodes.SUCCESS.toString(), entity, null);
         } else {
@@ -97,15 +98,25 @@ public abstract class ApiServicesWrapper<T extends BaseEntity, ID extends Serial
 
     @Override
     public ApiResponse<DeleteResponse, ErrorResponse> deleteById(ID entityId) {
-        if (!checkId(entityId))
+        if (checkId(entityId))
             return errorResponse(false, CANT_UPDATE, ApiResponseCodes.FAIL.toString(),
                     new ErrorResponse("the is is not a valid uuid", ApiResponseCodes.FAIL.toString()));
+        Optional<T> exist = genericRepo.findById(entityId);
+        if (exist.isEmpty())
+            return errorResponse(false, "Can't Delete", ApiResponseCodes.RESOURCE_NOT_FOUND.name(),
+                    new ErrorResponse("Nothing to delete, resource: { " + entityId + " } not exist", ApiResponseCodes.RESOURCE_NOT_FOUND.name()));
+
         genericRepo.deleteById(entityId);
         return success(true, "delete Done", ApiResponseCodes.SUCCESS.toString(), new DeleteResponse("1"));
     }
 
     @Override
     public ApiResponse<DeleteResponse, ErrorResponse> bulkDelete() {
+        List<T> all = genericRepo.findAll();
+        if (all.isEmpty())
+            return errorResponse(false, "Can't Delete", ApiResponseCodes.TABLE_EMPTY.name(),
+                    new ErrorResponse("Nothing to delete, table is empty", ApiResponseCodes.TABLE_EMPTY.name()));
+
         genericRepo.deleteAll();
         return success(true, "delete Done", ApiResponseCodes.SUCCESS.toString(), new DeleteResponse("1"));
     }
@@ -113,6 +124,6 @@ public abstract class ApiServicesWrapper<T extends BaseEntity, ID extends Serial
 
     @Override
     public boolean checkId(ID id) {
-        return ApiUtils.validUUID(id.toString());
+        return !ApiUtils.validUUID(id.toString());
     }
 }

@@ -7,6 +7,7 @@ import dev.yafatek.restcore.domain.BaseEntity;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 
 /**
  * Entry point to the library
@@ -15,14 +16,9 @@ import java.time.Instant;
  *
  * @param <T>  the child class that implements the the base entity
  * @param <ID> UUID Based Class to use it as an ID to the System Tables.
-// * @see BaseEntity for more information.
+ *             // * @see BaseEntity for more information.
  */
 public interface ApiServices<T extends BaseEntity, ID extends Serializable> {
-
-//    default ApiServices<T, ID> build(GenericRepo<T, ID> genericRepo) {
-//        return new ApiServicesWrapper<>(genericRepo) {
-//        };
-//    }
 
     /**
      * Method to Save the Data to the target Schema Table
@@ -37,7 +33,7 @@ public interface ApiServices<T extends BaseEntity, ID extends Serializable> {
      *
      * @return api Response or empty entity in case of Empty Table.
      */
-    ApiResponse<T, ErrorResponse> getAll();
+    ApiResponse<List<T>, ErrorResponse> getAll();
 
     /**
      * Method to Get One row of a targeted table in the Schema.
@@ -49,10 +45,12 @@ public interface ApiServices<T extends BaseEntity, ID extends Serializable> {
     ApiResponse<T, ErrorResponse> getById(ID entityId);
 
     /**
-     * @param after
-     * @return
+     * method to get all resources after a specific date.
+     *
+     * @param after the Instant Object
+     * @return response
      */
-    ApiResponse<T, ErrorResponse> getAllAfter(Instant after);
+    ApiResponse<List<T>, ErrorResponse> getAllAfter(Instant after);
 
     ApiResponse<T, ErrorResponse> updateById(T entity, ID entityId);
 

@@ -27,6 +27,11 @@ public class DemoEntity extends BaseEntity {
         this.attribute = attribute;
     }
 
+    public DemoEntity(String description, String attribute) {
+        this.description = description;
+        this.attribute = attribute;
+    }
+
     public String getAttribute() {
         return attribute;
     }

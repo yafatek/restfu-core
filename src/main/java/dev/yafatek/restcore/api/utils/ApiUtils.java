@@ -1,5 +1,11 @@
 package dev.yafatek.restcore.api.utils;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.UUID;
 
 /**
@@ -123,5 +129,14 @@ public final class ApiUtils {
         } catch (IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public static Instant stringToInstant(String offset) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        TemporalAccessor temporalAccessor = formatter.parse(offset);
+        LocalDateTime localDateTime = LocalDateTime.from(temporalAccessor);
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of("UTC"));
+        return Instant.from(zonedDateTime);
     }
 }
