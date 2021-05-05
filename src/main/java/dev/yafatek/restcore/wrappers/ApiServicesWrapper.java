@@ -1,6 +1,10 @@
 package dev.yafatek.restcore.wrappers;
 
-import dev.yafatek.restcore.api.utils.*;
+import dev.yafatek.restcore.api.responses.ApiResponse;
+import dev.yafatek.restcore.api.enums.ApiResponseCodes;
+import dev.yafatek.restcore.api.utils.ApiUtils;
+import dev.yafatek.restcore.api.responses.ErrorResponse;
+import dev.yafatek.restcore.api.responses.DeleteResponse;
 import dev.yafatek.restcore.domain.BaseEntity;
 import dev.yafatek.restcore.domain.GenericRepo;
 import dev.yafatek.restcore.services.ApiServices;
@@ -17,18 +21,55 @@ import java.util.UUID;
 
 import static dev.yafatek.restcore.api.utils.ApiUtils.*;
 
+/**
+ * Wrapper class for the ApiService
+ *
+ * @param <T>  actual Type
+ * @param <ID> the Is is UUID
+ * @author Feras E.Alawadi
+ * @version 1.0.101
+ * @see UUID
+ * @since 1.0.101
+ */
 @Service
 @Transactional
 public abstract class ApiServicesWrapper<T extends BaseEntity, ID extends Serializable> implements ApiServices<T, ID> {
 
+    /**
+     * Cant Find String Response
+     */
     protected static final String CANT_FIND = "Can't Load The Data";
+
+    /**
+     * Can't Update String Response
+     */
     protected static final String CANT_UPDATE = "can't update resource";
+    /**
+     * Can't Create event String Response
+     */
     protected static final String CANT_CREATE = "can't create resource";
+    /**
+     * Data Loaded String Response
+     */
     protected static final String DATA_LOADED = "Data Loaded";
+    /**
+     * Data Saved String Response
+     */
     protected static final String DATA_SAVED = "new resource saved!";
+    /**
+     * Calss Events Logger
+     */
     protected static final Logger LOGGER = LoggerFactory.getLogger(ApiServicesWrapper.class);
+    /**
+     * Generic Repository
+     */
     protected final GenericRepo<T, ID> genericRepo;
 
+    /**
+     * construct new object
+     *
+     * @param genericRepo the repository to be used with in the  class
+     */
     public ApiServicesWrapper(GenericRepo<T, ID> genericRepo) {
         this.genericRepo = genericRepo;
         LOGGER.info(" [*] generic repository: {}", genericRepo);

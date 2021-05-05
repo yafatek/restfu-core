@@ -40,7 +40,13 @@ artifacts {
 signing {
 	sign configurations.archives
 }
+bootJar {
+	enabled = false
+}
 
+jar {
+	enabled = true
+}
 publishing {
 	publications {
 		mavenJava(MavenPublication) {

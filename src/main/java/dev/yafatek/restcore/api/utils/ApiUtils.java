@@ -1,5 +1,9 @@
 package dev.yafatek.restcore.api.utils;
 
+import dev.yafatek.restcore.api.enums.ApiResponseCodes;
+import dev.yafatek.restcore.api.responses.ApiResponse;
+import dev.yafatek.restcore.api.responses.ErrorResponse;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,17 +22,16 @@ import java.util.UUID;
 public final class ApiUtils {
 
     /**
-     * Method to send success response
+     * method to return success response
      *
-     * @param status  status true or false
-     * @param message message content
-     * @param code    the response code
-     * @param body    response body usually a Java POJO
-     * @param <T>     POJO Type.
-     * @param <R>     Error POJO
-     * @return ApiResponse<T> with POJO Body
-     * @see ApiResponseCodes
-     * @see ErrorResponse
+     * @param status  boolean
+     * @param message string
+     * @param code    enum
+     * @param body    the response body
+     * @param error   error code
+     * @param <T>     type
+     * @param <R>     error type
+     * @return api response
      */
     public static <T, R> ApiResponse<T, R> successResponse(boolean status, String message, String code, T body, R error) {
         return new ApiResponse<>(
@@ -40,6 +43,16 @@ public final class ApiUtils {
         );
     }
 
+    /**
+     * return suceess response
+     *
+     * @param status  boolean
+     * @param message String
+     * @param code    enum
+     * @param body    the body type
+     * @param <T>     type
+     * @return api response
+     */
     public static <T> ApiResponse<T, ErrorResponse> success(boolean status, String message, String code, T body) {
         return new ApiResponse<>(
                 status,
@@ -131,6 +144,12 @@ public final class ApiUtils {
         }
     }
 
+    /**
+     * method that takes a string and return a Instant Object.
+     *
+     * @param offset the date as string
+     * @return Instant object.
+     */
     public static Instant stringToInstant(String offset) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

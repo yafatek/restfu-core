@@ -7,7 +7,7 @@ a full demo of the api can be found at the following Code
 ```java
 package dev.yafatek.restcore.unittest.v1;
 
-import dev.yafatek.restcore.api.utils.ApiUtils;
+import ApiUtils;
 import dev.yafatek.restcore.domain.DemoEntity;
 import dev.yafatek.restcore.domain.DemoRepo;
 import dev.yafatek.restcore.services.ApiServices;
