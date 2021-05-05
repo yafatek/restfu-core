@@ -110,8 +110,8 @@ publishing {
 
 			// The username and password we've fetched earlier
 			credentials {
-				username 'yafatek-solutions'
-				password 'Yafa!@123Yafa!@123'
+				username = ossrhUsername
+				password = ossrhPassword
 			}
 		}
 	}
