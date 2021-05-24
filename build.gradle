@@ -12,7 +12,7 @@ plugins {
 }
 
 group = 'dev.yafatek'
-version = '1.0.102'
+version = '1.0.105'
 sourceCompatibility = '11'
 archivesBaseName = "yafatek-restcore"
 
