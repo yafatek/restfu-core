@@ -11,8 +11,9 @@ plugins {
     id 'signing'
 }
 
+
 group = 'dev.yafatek'
-version = '1.0.105'
+version = '1.0.106'
 sourceCompatibility = '11'
 archivesBaseName = "yafatek-restcore"
 
