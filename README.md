@@ -9,16 +9,16 @@
     <dependency>
         <groupId>dev.yafatek</groupId>
         <artifactId>yafatek-restcore</artifactId>
-        <version>1.0.104</version>
+        <version>1.0.106</version>
     </dependency>
     ```
    * gradle:
     ```groovy
-     implementation 'dev.yafatek:yafatek-restcore:1.0.104'
+     implementation 'dev.yafatek:yafatek-restcore:1.0.106'
    ```
    * kotlin DSL:
    ```kotlin
-      implementation("dev.yafatek:yafatek-restcore:1.0.104")
+     implementation("dev.yafatek:yafatek-restcore:1.0.106")
    ```
 2- need more?
 -- 
@@ -27,13 +27,12 @@ check out our repository: https://search.maven.org/artifact/dev.yafatek/yafatek-
 3. Usage:
    * simple Usage: by create a repository that extends the GenericRepo
    ```java
-   @Repository
-   @Transactional
-    public interface CustomersRepo<T extends BaseEntity, ID extends Serializable> extends GenericRepo<T, ID>
-           Customer findByEmail(String email);
-    }
+    @Repository
+    public interface DemoRepo extends GenericRepo<DemoEntity, UUID> {
+      // CODE HERE
+     }
    ```
-   * create repo object in RestController class 
+   * create repo object in RestController class
    ```java
     private final CustomersRepo<Customer, UUID> customersRepo;
    ```
@@ -57,7 +56,7 @@ check out our repository: https://search.maven.org/artifact/dev.yafatek/yafatek-
    ```
 3- Full Demo:
 --
- * full demo of the api can be found at the following Code
+* full demo of the api can be found at the following Code
 
 ```java
 package dev.yafatek.restcore.unittest.v1;
