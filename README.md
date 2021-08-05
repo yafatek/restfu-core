@@ -4,19 +4,19 @@
 --
 1. Getting the Package:
    you can easily get the package from maven central
-    * Maven:
+   * Maven:
     ```xml
     <dependency>
         <groupId>dev.yafatek</groupId>
         <artifactId>yafatek-restcore</artifactId>
-        <version>1.0.104</version>
+        <version>1.0.106</version>
     </dependency>
     ```
-    * gradle:
+   * gradle:
     ```groovy
      implementation 'dev.yafatek:yafatek-restcore:1.0.106'
    ```
-    * kotlin DSL:
+   * kotlin DSL:
    ```kotlin
      implementation("dev.yafatek:yafatek-restcore:1.0.106")
    ```
@@ -25,27 +25,28 @@
 check out our repository: https://search.maven.org/artifact/dev.yafatek/yafatek-restcore
 
 3. Usage:
-    * simple Usage: by create a repository that extends the GenericRepo
+   * simple Usage: by create a repository that extends the GenericRepo
    ```java
-   @Repository
+    @Repository
     public interface DemoRepo extends GenericRepo<DemoEntity, UUID> {
-    }
+      // CODE HERE
+     }
    ```
-    * create repo object in RestController class
+   * create repo object in RestController class
    ```java
     private final CustomersRepo<Customer, UUID> customersRepo;
    ```
-    * and autowire it in the constructor.
+   * and autowire it in the constructor.
    ```java
       public CustomerConsumer( CustomersRepo<Customer, UUID> customersRepo) {
          this.customersRepo = customersRepo;
         }
    ```
-    * to start using the api we need to create an object from: ApiService<> interface:
+   * to start using the api we need to create an object from: ApiService<> interface:
    ```java
    private final ApiServices<Customer, UUID> customerService;
    ```
-    * then pass the repositrory that we create to the initalization of the api in the constructor
+   * then pass the repositrory that we create to the initalization of the api in the constructor
    ```java
     public CustomerConsumer( CustomersRepo<Customer, UUID> customersRepo) {
          this.customersRepo = customersRepo;
