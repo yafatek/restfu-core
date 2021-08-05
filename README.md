@@ -1,8 +1,61 @@
 ### RESTFULL Generic Lib
 
-#### Getting started
+1- Getting started
+--
+1. Getting the Package:
+   you can easily get the package from maven central
+    * Maven:
+    ```xml
+    <dependency>
+        <groupId>dev.yafatek</groupId>
+        <artifactId>yafatek-restcore</artifactId>
+        <version>1.0.104</version>
+    </dependency>
+    ```
+    * gradle:
+    ```groovy
+     implementation 'dev.yafatek:yafatek-restcore:1.0.106'
+   ```
+    * kotlin DSL:
+   ```kotlin
+     implementation("dev.yafatek:yafatek-restcore:1.0.106")
+   ```
+2- need more?
+-- 
+check out our repository: https://search.maven.org/artifact/dev.yafatek/yafatek-restcore
 
-a full demo of the api can be found at the following Code
+3. Usage:
+    * simple Usage: by create a repository that extends the GenericRepo
+   ```java
+   @Repository
+    public interface DemoRepo extends GenericRepo<DemoEntity, UUID> {
+    }
+   ```
+    * create repo object in RestController class
+   ```java
+    private final CustomersRepo<Customer, UUID> customersRepo;
+   ```
+    * and autowire it in the constructor.
+   ```java
+      public CustomerConsumer( CustomersRepo<Customer, UUID> customersRepo) {
+         this.customersRepo = customersRepo;
+        }
+   ```
+    * to start using the api we need to create an object from: ApiService<> interface:
+   ```java
+   private final ApiServices<Customer, UUID> customerService;
+   ```
+    * then pass the repositrory that we create to the initalization of the api in the constructor
+   ```java
+    public CustomerConsumer( CustomersRepo<Customer, UUID> customersRepo) {
+         this.customersRepo = customersRepo;
+         this.customerService = new ApiServicesWrapper<Customer, UUID>(customersRepo) {};
+        }
+  
+   ```
+3- Full Demo:
+--
+* full demo of the api can be found at the following Code
 
 ```java
 package dev.yafatek.restcore.unittest.v1;
