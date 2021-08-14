@@ -9,16 +9,16 @@
     <dependency>
         <groupId>dev.yafatek</groupId>
         <artifactId>yafatek-restcore</artifactId>
-        <version>1.0.106</version>
+        <version>1.0.108</version>
     </dependency>
     ```
    * gradle:
     ```groovy
-     implementation 'dev.yafatek:yafatek-restcore:1.0.106'
+     implementation 'dev.yafatek:yafatek-restcore:1.0.108'
    ```
    * kotlin DSL:
    ```kotlin
-     implementation("dev.yafatek:yafatek-restcore:1.0.106")
+     implementation("dev.yafatek:yafatek-restcore:1.0.108")
    ```
 2- need more?
 -- 
