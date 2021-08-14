@@ -18,8 +18,9 @@ public interface NetworkClient {
     /**
      * Get data from apis  without Auth headers.
      *
-     * @param <T>  return type
-     * @param type the response class type
+     * @param <T>         return type
+     * @param type        the response class type
+     * @param withHeaders to bind the token
      * @return response based on the type param
      */
     <T> T get(Type type, boolean withHeaders);
@@ -37,9 +38,11 @@ public interface NetworkClient {
     /**
      * method to perform POST request to the Api
      *
-     * @param <T>  the Object type
-     * @param type the type of the Object
-     * @param body the json Object to send to the api
+     * @param <T>         the Object type
+     * @param <R>         the return type
+     * @param type        the type of the Object
+     * @param body        the json Object to send to the api
+     * @param withHeaders to bind the token
      * @return an instance to continue chaining
      */
     <T, R> R post(Type type, T body, boolean withHeaders);
@@ -74,6 +77,7 @@ public interface NetworkClient {
      * method to update resource in the DB, send it to the Api to update it
      *
      * @param <T>  the object type
+     * @param <R>  the return type
      * @param type the object type
      * @param body the object as json
      * @return an instance to continue chaining
