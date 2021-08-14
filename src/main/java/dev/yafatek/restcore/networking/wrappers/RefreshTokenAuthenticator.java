@@ -6,8 +6,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import dev.yafatek.networking.v1.models.RefreshTokenRequest;
-import dev.yafatek.networking.v1.models.RefreshTokenResponse;
+import dev.yafatek.restcore.networking.models.RefreshTokenRequest;
+import dev.yafatek.restcore.networking.models.RefreshTokenResponse;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,17 +26,45 @@ import java.util.logging.Logger;
  * @since 1.0.107
  */
 public class RefreshTokenAuthenticator implements Authenticator {
+    /**
+     * class level logger
+     */
     private static final Logger LOGGER = Logger.getLogger(RefreshTokenAuthenticator.class.getName());
+    /**
+     * request media type
+     */
     private static final MediaType JSON_UTF8 = MediaType.parse("application/json; charset=utf-8");
+    /**
+     * refresh token response pojo
+     */
     private static RefreshTokenResponse responseApiResponse;
+    /**
+     * app context in flavor of Android Systems.
+     */
     private final Context context;
+    /**
+     * APIs URL
+     */
     private final String url;
 
+    /**
+     * pass the context and the api url
+     *
+     * @param context system ctx
+     * @param url     Apis url
+     */
     public RefreshTokenAuthenticator(Context context, String url) {
         this.context = context;
         this.url = url;
     }
 
+    /**
+     * to perform init authenticate with the apis
+     *
+     * @param route    the dest
+     * @param response the api response to determine if we have an expired token
+     * @return the request
+     */
     @Override
     public Request authenticate(Route route, @NotNull Response response) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -64,11 +92,25 @@ public class RefreshTokenAuthenticator implements Authenticator {
     }
 
 
+    /**
+     * check if there is a need to check and refresh the token
+     *
+     * @param response the current response
+     * @return true, false
+     */
     private boolean isRequestWithAccessToken(Response response) {
         String header = response.request().header("Authorization");
         return header != null && header.startsWith("Bearer");
     }
 
+    /**
+     * method to refresh it
+     *
+     * @param oldRefreshToken the old one
+     * @param prefs           get it out of the perf in android
+     * @param url             the api url to refresh the token
+     * @return refreshed token
+     */
     private String refreshToken(String oldRefreshToken, SharedPreferences prefs, String url) {
         final OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
@@ -120,6 +162,13 @@ public class RefreshTokenAuthenticator implements Authenticator {
     }
 
 
+    /**
+     * bind the new or the old token and chain it with the request.
+     *
+     * @param request     the request
+     * @param accessToken the token
+     * @return okHttp request
+     */
     private Request newRequestWithAccessToken(Request request, String accessToken) {
         return request.newBuilder()
                 .header("Authorization", "Bearer " + accessToken)
